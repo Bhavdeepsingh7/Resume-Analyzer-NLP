@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c5364;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #203a43;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            text-align: center;
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        ul li {
+            margin: 5px 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        input[type="submit"] {
+            padding: 12px 25px;
+            background: #2c5364;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background: #1b3a4b;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .result p {
+            text-align: left;
+            margin: 8px 0;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #2c5364;
+        }
+
+        .divider {
+            margin: 20px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .skill {
+            background: #2c5364;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- Header -->
+    <div class="card">
+        <h1>AI Resume Analyzer</h1>
+        <p>Upload your resume and get intelligent insights instantly</p>
+
+        <ul>
+            <li>✔ Resume Categorization</li>
+            <li>✔ Job Recommendation</li>
+            <li>✔ Skill Extraction</li>
+        </ul>
+    </div>
+
+    <!-- Upload -->
+    <div class="card">
+        <h2>Upload Resume</h2>
+
+        <form action="/pred" method="post" enctype="multipart/form-data">
+            <input type="file" name="resume" accept=".pdf, .txt" required>
+            <input type="submit" value="Analyze Resume">
+        </form>
+
+        {% if message %}
+            <p>{{message}}</p>
+        {% endif %}
+    </div>
+
+    <!-- Results -->
+    {% if predicted_category %}
+    <div class="card result">
+
+        <h2>Results</h2>
+
+        <p><span class="highlight">Category:</span> {{predicted_category}}</p>
+        <p><span class="highlight">Recommended Job:</span> {{recommended_job}}</p>
+
+        <div class="divider"></div>
+
+        <p><span class="highlight">Name:</span> {{name}}</p>
+        <p><span class="highlight">Phone:</span> {{phone}}</p>
+        <p><span class="highlight">Email:</span> {{email}}</p>
+
+        <div class="divider"></div>
+
+        {% if extracted_skills %}
+            <h3 style="text-align:center;">Skills</h3>
+            <div class="skills-list">
+                {% for skill in extracted_skills %}
+                    <span class="skill">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No skills found</p>
+        {% endif %}
+
+        <div class="divider"></div>
+
+        {% if extracted_education %}
+            <h3 style="text-align:center;">Education</h3>
+            <ul>
+                {% for edu in extracted_education %}
+    <li>
+        <strong>College:</strong> {{ edu.college }} <br>
+        
+    </li>
+{% endfor %}
+            </ul>
+        {% else %}
+            <p>No education found</p>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

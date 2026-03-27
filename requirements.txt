@@ -1,0 +1,10 @@
+flask
+PyPDF2
+pdfminer
+Flask==3.0.3
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.4.2
+nltk==3.8.1
+pdfplumber==0.11.0
+pymupdf==1.24.9
