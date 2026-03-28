@@ -5,11 +5,26 @@ import re
 
 app= Flask(__name__)
 
+import os
+import pickle
 
-rf_classifier_categorization = pickle.load(open('models/rf_classifier_categorization.pkl','rb'))
-tfidf_vectorizer_categorization = pickle.load(open('models/tfidf_vectorizer_categorization.pkl','rb'))
-rf_classifier_job_recommendation = pickle.load(open('models/rf_classifier_job_recommendation.pkl','rb'))
-tfidf_vectorizer_job_recommendation = pickle.load(open('models/tfidf_vectorizer_job_recommendation.pkl','rb'))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+rf_classifier_categorization = pickle.load(
+    open(os.path.join(BASE_DIR, "models/rf_classifier_categorization.pkl"), "rb")
+)
+
+tfidf_vectorizer_categorization = pickle.load(
+    open(os.path.join(BASE_DIR, "models/tfidf_vectorizer_categorization.pkl"), "rb")
+)
+
+rf_classifier_job_recommendation = pickle.load(
+    open(os.path.join(BASE_DIR, "models/rf_classifier_job_recommendation.pkl"), "rb")
+)
+
+tfidf_vectorizer_job_recommendation = pickle.load(
+    open(os.path.join(BASE_DIR, "models/tfidf_vectorizer_job_recommendation.pkl"), "rb")
+)
 
 
 # helper functions
@@ -17,18 +32,18 @@ def pdf_to_text(file):
     reader = PdfReader(file)
     text = ''
     for page in range(len(reader.pages)):
-        text+=reader.pages[page].extract_text()
+        text += reader.pages[page].extract_text() or ""
     return text
 
 
 def cleanResume(txt):
-    cleanText = re.sub('http\S+\s*', ' ', txt)
+    cleanText = re.sub(r'http\S+\s*', ' ', txt)
     cleanText = re.sub('RT|cc', ' ', cleanText)
-    cleanText = re.sub('#\S+', '', cleanText)
-    cleanText = re.sub('@\S+', ' ', cleanText)
+    cleanText = re.sub(r'#\S+', '', cleanText)
+    cleanText = re.sub(r'@\S+', ' ', cleanText)
     cleanText = re.sub('[%s]' % re.escape("""!"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"""), ' ', cleanText)
     cleanText = re.sub(r'[^\x00-\x7f]', ' ', cleanText)
-    cleanText = re.sub('\s+', ' ', cleanText)
+    cleanText = re.sub(r'\s+', ' ', cleanText)
     return cleanText
 
 
@@ -98,7 +113,7 @@ def extract_skills_from_resume(text):
     'Microsoft Dynamics', 'Tableau', 'Power BI', 'QlikView', 'Looker', 'Data Warehousing', 'ETL', 'Data Engineering', 'Data Governance',
     'Data Quality', 'Master Data Management', 'Predictive Analytics', 'Prescriptive Analytics', 'Descriptive Analytics', 'Business Intelligence',
     'Dashboarding', 'Reporting', 'Data Mining', 'Web Scraping', 'API Integration', 'RESTful APIs', 'GraphQL', 'SOAP', 'Microservices',
-    'Serverless Architecture', 'Lambda Functions', 'Event-Driven Architecture', 'Message Queues', 'GraphQL', 'Socket.io', 'WebSockets'
+    'Serverless Architecture', 'Lambda Functions', 'Event-Driven Architecture', 'Message Queues', 'GraphQL', 'Socket.io', 'WebSockets',
 'Ruby', 'Ruby on Rails', 'PHP', 'Symfony', 'Laravel', 'CakePHP', 'Zend Framework', 'ASP.NET', 'C#', 'VB.NET', 'ASP.NET MVC', 'Entity Framework',
     'Spring', 'Hibernate', 'Struts', 'Kotlin', 'Swift', 'Objective-C', 'iOS Development', 'Android Development', 'Flutter', 'React Native', 'Ionic',
     'Mobile UI/UX Design', 'Material Design', 'SwiftUI', 'RxJava', 'RxSwift', 'Django', 'Flask', 'FastAPI', 'Falcon', 'Tornado', 'WebSockets',
