@@ -11,10 +11,6 @@ venv/
 *.xlsx
 data/
 
-# Models
-*.pkl
-*.h5
-*.model
 
 # Jupyter
 .ipynb_checkpoints/
